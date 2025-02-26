@@ -13,7 +13,12 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   const config = new DocumentBuilder()
     .setTitle('KinyaLink Backend')
-    .setDescription('sign translation backend')
+    .setDescription('kinyarwanda sign language translation backend system')
+    .setContact(
+      'MUGISHA Pascal',
+      'https://mugisha-pascal.vercel.app/',
+      'mugishapascal2008@gmail.com',
+    )
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
