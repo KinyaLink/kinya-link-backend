@@ -38,28 +38,6 @@ export class AuthController {
     const token = await this.authService.login(req.user);
     return token;
   }
-  @UseGuards(LocalAuthGuard)
-  @ApiOkResponse({ type: logoutResponseDto })
-  @ApiBadRequestResponse({ type: logoutBadResponseDto })
-  @Post('logout')
-  async logout(@Req() req, @Res() res) {
-    req.logout((err) => {
-      if (err) {
-        console.error('Error during logout:', err);
-        return res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Logout failed' });
-      }
-
-      res.status(HttpStatus.OK).json({ message: 'Logout successful' });
-    });
-  }
-  @UseGuards(JwtAuthGuard)
-  @ApiOkResponse({ type: UserEntity })
-  @Get('profile')
-  async getProfile(@Request() req) {
-    return req.user;
-  }
   @Post('signup')
   @ApiCreatedResponse({ type: UserEntity })
   @ApiBody({ type: CreateUserDto })

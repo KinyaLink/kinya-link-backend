@@ -6,8 +6,8 @@ export type User = any;
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(firstName: string): Promise<User | undefined> {
-    return this.prisma.user.findFirst({ where: { firstName } });
+  async findOne(email: string): Promise<User | undefined> {
+    return this.prisma.user.findFirst({ where: { email } });
   }
   async findAll() {
     return this.prisma.user.findMany();
