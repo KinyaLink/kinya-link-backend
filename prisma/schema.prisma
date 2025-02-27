@@ -12,19 +12,49 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User{
-  id Int @id @default(autoincrement())
-  email String? @unique
-  password String?
-  phoneNumber String? @map("phone_number")
-  firstName String? @map("first_name")
-  lastName String? @map("last_name")
-  avatarUrl String? @map("avatar_url")
-  googleId String? @unique @map("google_id")
-  facebookId String? @unique @map("facebook_id")
-  provider String? 
-// facebook / google
-createdAt DateTime @default(now()) @map("created_at")
-updatedAt DateTime @updatedAt @map("updated_at")
-@@map("users")
+model User {
+  id            Int           @id @default(autoincrement())
+  email         String?       @unique
+  password      String?
+  phoneNumber   String?       @map("phone_number")
+  firstName     String?       @map("first_name")
+  lastName      String?       @map("last_name")
+  avatarUrl     String?       @map("avatar_url")
+  googleId      String?       @unique @map("google_id")
+  facebookId    String?       @unique @map("facebook_id")
+  provider      String?  
+  subscriptions Subscription[]  // One-to-many relation (corrected)
+
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@map("users")
 }
+
+model Subscription {
+  id        String           @id @default(uuid())
+  userId    Int              // Removed @unique for one-to-many
+  planId    String
+  status    String           // "active", "inactive", "expired"
+  startDate DateTime         @default(now())
+  endDate   DateTime?
+
+  user      User             @relation(fields: [userId], references: [id])
+  plan      SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@map("subscriptions")
+}
+
+
+model SubscriptionPlan {
+  id            String           @id @default(uuid())
+  name          String           // "Basic", "Standard", "Premium"
+  pricePerMonth Float            // Price in USD
+  description   String           // Description of the plan
+  createdAt     DateTime         @default(now())
+
+  subscriptions Subscription[]   // One plan can have multiple subscriptions
+
+  @@map("subscription_plans")
+}
+

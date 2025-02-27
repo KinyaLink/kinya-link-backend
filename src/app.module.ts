@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TwilioService } from './twilio/twilio.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { PaymentsModule } from './payments/payments.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -16,6 +18,8 @@ import { join } from 'path';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    SubscriptionsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TwilioService],
