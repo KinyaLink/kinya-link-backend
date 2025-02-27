@@ -3,6 +3,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { TwilioService } from 'src/twilio/twilio.service';
+import { UpdateUserDto } from '../dto/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -55,6 +56,25 @@ export class UsersService {
       return updatedUser;
     } else {
       return 'failed adding phone number';
+    }
+  }
+  async updateProfile(updateUserDto: UpdateUserDto, id: number) {
+    const userToUpdate = await this.findById(id);
+    if (userToUpdate) {
+      return this.prisma.user.update({ where: { id }, data: updateUserDto });
+    } else {
+      return { message: 'user not found' };
+    }
+  }
+  async updateProfilePicture(imagePath: string | null, id: number) {
+    const userToUpdate = await this.findById(id);
+    if (userToUpdate) {
+      return this.prisma.user.update({
+        where: { id },
+        data: { avatarUrl: imagePath },
+      });
+    } else {
+      return { message: 'user not found' };
     }
   }
 }
