@@ -23,7 +23,7 @@ export class CreateUserDto {
   @IsEmail()
   @IsString()
   @IsNotEmpty()
-  email: string;
+  email?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()

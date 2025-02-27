@@ -11,6 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { GoogleStrategy } from './strategies/google.strategy';
 dotenv.config();
 @Module({
   providers: [
@@ -19,6 +20,7 @@ dotenv.config();
     CreateUserDto,
     UserEntity,
     LocalStrategy,
+    GoogleStrategy,
     JwtStrategy,
   ],
   imports: [

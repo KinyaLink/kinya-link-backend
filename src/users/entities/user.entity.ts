@@ -13,7 +13,7 @@ export class UserEntity implements User {
   id: number;
 
   @ApiProperty()
-  email: string;
+  email: string | null;
 
   @Exclude() // Exclude password from serialization
   @ApiProperty()

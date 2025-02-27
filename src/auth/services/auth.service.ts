@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -30,5 +30,25 @@ export class AuthService {
   }
   signup(createUserDto: CreateUserDto) {
     return this.prisma.user.create({ data: createUserDto });
+  }
+  async validateGoogleUser(profile: any) {
+    let user = await this.userService.findByGoogleId(profile.googleId);
+
+    if (!user) {
+      const newUser: CreateUserDto = {
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+        avatarUrl: profile.photos[0].value,
+        email: profile.emails[0].value,
+        googleId: profile.id,
+      };
+      user = await this.userService.createUser(newUser);
+    }
+
+    const payload = { userId: user.id, email: user.email };
+    return {
+      user,
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }
