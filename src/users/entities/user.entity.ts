@@ -20,6 +20,9 @@ export class UserEntity implements User {
   password: string | null;
 
   @ApiProperty({ required: false })
+  phoneNumber: string | null;
+
+  @ApiProperty({ required: false })
   firstName: string | null;
 
   @ApiProperty({ required: false })
