@@ -5,14 +5,12 @@ import { PrismaClient, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { GoogleService } from './google.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
-    private googleService: GoogleService,
     private prisma: PrismaService,
     private createUserDto: CreateUserDto,
   ) {}
@@ -35,23 +33,13 @@ export class AuthService {
   }
   async validateGoogleUser(profile: any) {
     let user = await this.userService.findByGoogleId(profile.providerId);
-    console.log(profile);
-    const phoneNumber = await this.googleService.getPhoneNumber(
-      profile.accessToken,
-    );
-    console.log(phoneNumber);
+
     if (!user) {
-      const phoneNumber = await this.googleService.getPhoneNumber(
-        profile.accessToken,
-      );
-      console.log(phoneNumber);
-      // if (phoneNumber) {
       const newUser: CreateUserDto = {
         firstName: profile.firstName,
         lastName: profile.lastName,
         avatarUrl: profile.picture,
         email: profile.email,
-        // phoneNumber,
         googleId: profile.providerId,
       };
       user = await this.userService.createUser(newUser);

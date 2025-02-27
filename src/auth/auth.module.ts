@@ -12,7 +12,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { GoogleStrategy } from './strategies/google.strategy';
-import { GoogleService } from './services/google.service';
+import { TwilioService } from 'src/twilio/twilio.service';
 dotenv.config();
 @Module({
   providers: [
@@ -22,7 +22,7 @@ dotenv.config();
     UserEntity,
     LocalStrategy,
     GoogleStrategy,
-    GoogleService,
+    TwilioService,
     JwtStrategy,
   ],
   imports: [
