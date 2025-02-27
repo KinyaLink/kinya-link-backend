@@ -44,4 +44,15 @@ export class AuthController {
   async signup(@Body() createUserDto: CreateUserDto) {
     return new UserEntity(await this.authService.signup(createUserDto));
   }
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {
+    return { message: 'Redirecting to Google OAuth...' };
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req) {
+    return this.authService.validateGoogleUser(req.user);
+  }
 }

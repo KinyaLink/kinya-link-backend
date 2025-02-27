@@ -16,6 +16,9 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { id } });
   }
   async findByGoogleId(googleId: string): Promise<User | null> {
+    if (googleId == null) {
+      return null;
+    }
     return this.prisma.user.findFirst({ where: { googleId } });
   }
 

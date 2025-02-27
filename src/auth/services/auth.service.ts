@@ -32,23 +32,26 @@ export class AuthService {
     return this.prisma.user.create({ data: createUserDto });
   }
   async validateGoogleUser(profile: any) {
-    let user = await this.userService.findByGoogleId(profile.googleId);
-
+    let user = await this.userService.findByGoogleId(profile.providerId);
     if (!user) {
       const newUser: CreateUserDto = {
-        firstName: profile.name.givenName,
-        lastName: profile.name.familyName,
-        avatarUrl: profile.photos[0].value,
-        email: profile.emails[0].value,
-        googleId: profile.id,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatarUrl: profile.picture,
+        email: profile.email,
+        googleId: profile.providerId,
       };
       user = await this.userService.createUser(newUser);
+      return user;
     }
-
-    const payload = { userId: user.id, email: user.email };
-    return {
-      user,
-      accessToken: this.jwtService.sign(payload),
-    };
+    if (user) {
+      const payload = { userId: user.id, email: user.email };
+      return {
+        user,
+        accessToken: this.jwtService.sign(payload),
+      };
+    } else {
+      return null;
+    }
   }
 }
