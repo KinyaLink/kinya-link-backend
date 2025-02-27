@@ -32,7 +32,7 @@ export class UsersController {
   async getUser(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.userService.findById(id));
   }
-  @Put('add/phoneNumber/:id')
+  @Patch('add/phoneNumber/:id')
   async updatePhoneNumber(
     @Body() phoneNumber: string,
     @Param('id', ParseIntPipe) id: number,
