@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
-import { FeaturesService } from './features.service';
-import { FeaturesController } from './features.controller';
+import { FeaturesController } from './controllers/features.controller';
+import { FeaturesService } from './services/features.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { SubscriptionsModule } from 'src/subscriptions/subscriptions.module';
 
 @Module({
+  imports: [PrismaModule, SubscriptionsModule],
   controllers: [FeaturesController],
   providers: [FeaturesService],
 })

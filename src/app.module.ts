@@ -9,6 +9,7 @@ import { join } from 'path';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PaymentsModule } from './payments/payments.module';
 import { FeaturesModule } from './features/features.module';
+import { UsageModule } from './usage/usage.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -22,6 +23,7 @@ import { FeaturesModule } from './features/features.module';
     SubscriptionsModule,
     PaymentsModule,
     FeaturesModule,
+    UsageModule,
   ],
   controllers: [AppController],
   providers: [AppService, TwilioService],

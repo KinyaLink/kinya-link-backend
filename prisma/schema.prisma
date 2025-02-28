@@ -28,6 +28,7 @@ model User {
 
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
+  usages        Usage[]        @relation("UserUsages")
 
   @@map("users")
 }
@@ -58,4 +59,16 @@ model SubscriptionPlan {
 
   @@map("subscription_plans")
 }
+model Usage {
+  id        String   @id @default(uuid())
+  userId    Int
+  callsMade Int      @default(0)  // Tracks number of calls made by the user
+  month     String   // e.g. "2025-02" to track usage for the month
+  year      Int      // Year of the usage record
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  user      User     @relation("UserUsages", fields: [userId], references: [id])
+
+  @@map("usages")
+}
