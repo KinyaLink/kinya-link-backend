@@ -109,4 +109,36 @@ export class PaymentsService {
 
     // Additional business logic, like sending a confirmation email, etc.
   }
+  async fetchBillingHistory(userId: string) {
+    // Find the user by userId (make sure the user exists)
+    const user = await this.prisma.user.findUnique({
+      where: { id: parseInt(userId) },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    try {
+      // Fetch the user's Stripe customer ID (assuming it's stored in the user model)
+      const stripeCustomerId = user.stripeCustomerId;
+
+      if (!stripeCustomerId) {
+        throw new NotFoundException(
+          'Stripe customer ID not found for the user',
+        );
+      }
+
+      // Retrieve invoices from Stripe
+      const invoices = await this.stripe.invoices.list({
+        customer: stripeCustomerId,
+        limit: 10, // Limit the number of invoices retrieved
+      });
+
+      // Return the list of invoices
+      return invoices;
+    } catch (error) {
+      throw new NotFoundException('Error fetching billing history');
+    }
+  }
 }

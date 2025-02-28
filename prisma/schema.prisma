@@ -23,6 +23,7 @@ model User {
   googleId      String?       @unique @map("google_id")
   facebookId    String?       @unique @map("facebook_id")
   provider      String?  
+  stripeCustomerId String?
   subscriptions Subscription[]  
 
   createdAt     DateTime      @default(now()) @map("created_at")

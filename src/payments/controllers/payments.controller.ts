@@ -25,4 +25,8 @@ export class PaymentsController {
   async verifyPayment(@Body() verifyPaymentDto: VerifyPaymentDto) {
     return this.paymentsService.verifyPayment(verifyPaymentDto);
   }
+  @Get('history/:userId')
+  async getBillingHistory(@Param('userId') userId: string) {
+    return this.paymentsService.fetchBillingHistory(userId);
+  }
 }

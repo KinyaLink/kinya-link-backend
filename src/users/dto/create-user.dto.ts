@@ -55,6 +55,11 @@ export class CreateUserDto {
   @IsString()
   provider?: string; // 'facebook' or 'google'
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  stripeCustomerId?: string;
+
   @ApiProperty({ required: false, default: new Date() })
   @IsOptional()
   createdAt?: Date;

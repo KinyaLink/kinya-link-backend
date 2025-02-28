@@ -40,6 +40,9 @@ export class UserEntity implements User {
   @ApiProperty({ required: false })
   provider: string | null; // 'facebook' or 'google'
 
+  @ApiProperty({ required: false })
+  stripeCustomerId: string | null;
+
   @ApiProperty()
   createdAt: Date;
 
