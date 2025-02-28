@@ -8,35 +8,21 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PaymentsService } from '../services/payments.service';
-import { CreatePaymentDto } from '../dto/create-payment.dto';
-import { UpdatePaymentDto } from '../dto/update-payment.dto';
+import { UpdatePaymentDto } from '../dto/update-payment-intent.dto';
+import { CreatePaymentIntentDto } from '../dto/create-payment-intent.dto';
+import { VerifyPaymentDto } from '../dto/verify-payment.dto';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
-
-  @Post()
-  create(@Body() createPaymentDto: CreatePaymentDto) {
-    return this.paymentsService.create(createPaymentDto);
+  @Post('initiate')
+  async createPaymentIntent(
+    @Body() createPaymentIntentDto: CreatePaymentIntentDto,
+  ) {
+    return this.paymentsService.createPaymentIntent(createPaymentIntentDto);
   }
-
-  @Get()
-  findAll() {
-    return this.paymentsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentsService.update(+id, updatePaymentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.paymentsService.remove(+id);
+  @Post('verify')
+  async verifyPayment(@Body() verifyPaymentDto: VerifyPaymentDto) {
+    return this.paymentsService.verifyPayment(verifyPaymentDto);
   }
 }
