@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { CreateSubscriptionDto } from '../dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from '../dto/update-subscription.dto';
@@ -14,6 +15,7 @@ import { SubscriptionsService } from '../services/subscriptions.service';
 import { subscribeBodyInterface } from '../interfaces/subscribe-body.interface';
 import { CancelSubscriptionDto } from '../dto/cancel-subscription.dto';
 import { CheckSubscriptionDto } from '../dto/check-subscription.dto';
+import { ChangeSubscriptionDto } from '../dto/change-subscription.dto';
 
 @Controller('subscriptions')
 export class SubscriptionsController {
@@ -37,6 +39,14 @@ export class SubscriptionsController {
   async checkStatus(@Query() checkSubscriptionDto: CheckSubscriptionDto) {
     return this.subscriptionsService.checkSubscriptionStatus(
       checkSubscriptionDto,
+    );
+  }
+  @Put('change')
+  async changeSubscription(
+    @Body() changeSubscriptionDto: ChangeSubscriptionDto,
+  ) {
+    return this.subscriptionsService.changeSubscriptionPlan(
+      changeSubscriptionDto,
     );
   }
 }
