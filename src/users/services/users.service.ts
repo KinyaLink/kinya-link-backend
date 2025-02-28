@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { TwilioService } from 'src/twilio/twilio.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { CreateSubscriptionPlanDto } from 'src/subscriptions/dto/create-subscription-plan.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -95,5 +96,34 @@ export class UsersService {
         },
       },
     });
+  }
+  async addSubscriptionPlan(dto: CreateSubscriptionPlanDto) {
+    return await this.prisma.subscriptionPlan.create({
+      data: {
+        name: dto.name,
+        pricePerMonth: dto.pricePerMonth,
+        description: dto.description,
+      },
+    });
+  }
+
+  async deleteSubscriptionPlan(planId: string) {
+    // Check if the plan exists
+    const plan = await this.prisma.subscriptionPlan.findUnique({
+      where: { id: planId },
+    });
+
+    if (!plan) {
+      throw new NotFoundException(
+        `Subscription plan with ID ${planId} not found`,
+      );
+    }
+
+    // Delete the subscription plan
+    await this.prisma.subscriptionPlan.delete({
+      where: { id: planId },
+    });
+
+    return { message: 'Subscription plan deleted successfully' };
   }
 }
