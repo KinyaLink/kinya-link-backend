@@ -23,7 +23,7 @@ model User {
   googleId      String?       @unique @map("google_id")
   facebookId    String?       @unique @map("facebook_id")
   provider      String?  
-  subscriptions Subscription[]  // One-to-many relation (corrected)
+  subscriptions Subscription[]  
 
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")

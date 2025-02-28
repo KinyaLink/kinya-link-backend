@@ -77,4 +77,12 @@ export class UsersService {
       return { message: 'user not found' };
     }
   }
+  async deleteUser(id: number) {
+    const userToDelete = await this.findById(id);
+    if (userToDelete) {
+      return this.prisma.user.delete({ where: { id } });
+    } else {
+      return { message: 'user not found' };
+    }
+  }
 }

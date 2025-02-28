@@ -1,62 +1,45 @@
-import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
-import { PaymentService } from './payment.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { CreateSubscriptionDto } from '../dto/create-subscription.dto';
+import { UpdateSubscriptionDto } from '../dto/update-subscription.dto';
+import { SubscriptionsService } from '../services/subscriptions.service';
 
 @Controller('subscriptions')
-export class SubscriptionController {
-  constructor(private readonly paymentService: PaymentService) {}
+export class SubscriptionsController {
+  constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
-  @Post('/upgrade')
-  @UseGuards(JwtAuthGuard)
-  async upgradeSubscription(@Req() req, @Body() { planId, token }) {
-    const user = req.user; // Extract user from JWT token
-    const subscription = await this.paymentService.createSubscription(
-      user.id,
-      token,
-      planId,
-    );
-
-    return { message: 'Subscription upgraded successfully!', subscription };
-  }
-  // Handle MoMo payment request (for subscription upgrade)
-  @Post('/momo/upgrade')
-  @UseGuards(JwtAuthGuard)
-  async upgradeWithMoMo(@Req() req, @Body() { amount, phoneNumber }) {
-    const user = req.user; // Get the logged-in user
-    const paymentResult = await this.momoPaymentService.initiatePayment(
-      amount,
-      phoneNumber,
-    );
-
-    // Save the transaction data or notify user about the payment link
-    return {
-      message: 'Payment initiated with MoMo',
-      paymentDetails: paymentResult,
-    };
+  @Post()
+  create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
+    return this.subscriptionsService.create(createSubscriptionDto);
   }
 
-  // Handle MoMo payment verification
-  @Post('/momo/verify')
-  @UseGuards(JwtAuthGuard)
-  async verifyMoMoPayment(@Req() req, @Body() { transactionId }) {
-    const paymentStatus =
-      await this.momoPaymentService.verifyPayment(transactionId);
+  @Get()
+  findAll() {
+    return this.subscriptionsService.findAll();
+  }
 
-    if (paymentStatus.status === 'successful') {
-      // Update the user's subscription status to 'active'
-      const user = req.user;
-      const planId = req.body.planId; // Plan user has chosen
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subscriptionsService.findOne(+id);
+  }
 
-      // Save subscription details in the database (same as Stripe)
-      await this.paymentService.createSubscription(
-        user.id,
-        transactionId,
-        planId,
-      );
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateSubscriptionDto: UpdateSubscriptionDto,
+  ) {
+    return this.subscriptionsService.update(+id, updateSubscriptionDto);
+  }
 
-      return { message: 'Subscription upgraded successfully via MoMo!' };
-    }
-
-    return { message: 'Payment failed. Please try again.' };
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.subscriptionsService.remove(+id);
   }
 }

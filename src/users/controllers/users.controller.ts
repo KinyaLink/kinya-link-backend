@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -54,5 +55,9 @@ export class UsersController {
   ) {
     const imagePath = image ? image.path : null;
     return this.userService.updateProfilePicture(imagePath, id);
+  }
+  @Delete('delete/:id')
+  async deleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.deleteUser(id);
   }
 }
