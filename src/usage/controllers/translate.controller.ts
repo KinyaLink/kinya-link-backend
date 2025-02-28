@@ -9,7 +9,7 @@ import {
 import { Request } from 'express';
 import { UsageService } from '../services/usage.service';
 
-@Controller('api/translate')
+@Controller('translate')
 export class TranslateController {
   constructor(private readonly usageService: UsageService) {}
 

@@ -85,4 +85,15 @@ export class UsersService {
       return { message: 'user not found' };
     }
   }
+  async getAllUsersWithSubscriptions() {
+    return await this.prisma.user.findMany({
+      include: {
+        subscriptions: {
+          include: {
+            plan: true, // Fetch subscription plan details
+          },
+        },
+      },
+    });
+  }
 }

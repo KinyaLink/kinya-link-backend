@@ -12,6 +12,7 @@ import { FeaturesModule } from './features/features.module';
 import { UsageModule } from './usage/usage.module';
 import { TrackUsageMiddleware } from './usage/middlewares/track-usage.middleware';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthMiddleware } from './auth/middlewares/auth.middleware';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -33,6 +34,7 @@ import { PrismaModule } from './prisma/prisma.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TrackUsageMiddleware).forRoutes('*'); // Track usage for all routes
+    consumer.apply(TrackUsageMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware).forRoutes('api/admin/users');
   }
 }
