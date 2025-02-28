@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -10,6 +10,8 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PaymentsModule } from './payments/payments.module';
 import { FeaturesModule } from './features/features.module';
 import { UsageModule } from './usage/usage.module';
+import { TrackUsageMiddleware } from './usage/middlewares/track-usage.middleware';
+import { PrismaModule } from './prisma/prisma.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -24,8 +26,13 @@ import { UsageModule } from './usage/usage.module';
     PaymentsModule,
     FeaturesModule,
     UsageModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService, TwilioService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TrackUsageMiddleware).forRoutes('*'); // Track usage for all routes
+  }
+}

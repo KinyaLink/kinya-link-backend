@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "usages" ALTER COLUMN "month" DROP NOT NULL,
+ALTER COLUMN "year" DROP NOT NULL;
