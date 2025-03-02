@@ -13,6 +13,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { TwilioService } from 'src/twilio/twilio.service';
+import { PasswordService } from './services/password.service';
 dotenv.config();
 @Module({
   providers: [
@@ -23,6 +24,7 @@ dotenv.config();
     LocalStrategy,
     GoogleStrategy,
     TwilioService,
+    PasswordService,
     JwtStrategy,
   ],
   imports: [

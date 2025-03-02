@@ -1,96 +1,84 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Create subscription plans
-  const basicPlan = await prisma.subscriptionPlan.create({
-    data: {
-      name: 'Basic',
-      pricePerMonth: 9.99,
-      description: 'Basic subscription plan with limited features.',
-    },
-  });
-
-  const standardPlan = await prisma.subscriptionPlan.create({
-    data: {
-      name: 'Standard',
-      pricePerMonth: 19.99,
-      description: 'Standard subscription plan with more features.',
-    },
-  });
-
-  const premiumPlan = await prisma.subscriptionPlan.create({
-    data: {
-      name: 'Premium',
-      pricePerMonth: 29.99,
-      description: 'Premium subscription plan with all features.',
-    },
-  });
+  // Hash a default password
+  const hashedPassword = await bcrypt.hash('password123', 10);
 
   // Create users
-  const user1 = await prisma.user.create({
-    data: {
-      email: 'john.doe@example.com',
-      password: 'password123',
+  const user1 = await prisma.user.upsert({
+    where: { email: 'user1@example.com' },
+    update: {},
+    create: {
+      email: 'user1@example.com',
+      password: hashedPassword,
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '+1234567890',
-      avatarUrl: 'https://example.com/avatar1.png',
-      googleId: 'google-id-123',
-      facebookId: 'facebook-id-123',
-      provider: 'google',
-      subscriptions: {
-        create: {
-          planId: basicPlan.id,
-          status: 'active',
-        },
-      },
+      phoneNumber: '1234567890',
+      provider: 'email',
+      stripeCustomerId: 'cus_123456',
     },
   });
 
-  const user2 = await prisma.user.create({
-    data: {
-      email: 'jane.smith@example.com',
-      password: 'password456',
+  const user2 = await prisma.user.upsert({
+    where: { email: 'user2@example.com' },
+    update: {},
+    create: {
+      email: 'user2@example.com',
+      password: hashedPassword,
       firstName: 'Jane',
-      lastName: 'Smith',
-      phoneNumber: '+0987654321',
-      avatarUrl: 'https://example.com/avatar2.png',
-      googleId: 'google-id-456',
-      facebookId: 'facebook-id-456',
-      provider: 'facebook',
-      subscriptions: {
-        create: {
-          planId: premiumPlan.id,
-          status: 'active',
-        },
-      },
+      lastName: 'Doe',
+      phoneNumber: '0987654321',
+      provider: 'email',
+      stripeCustomerId: 'cus_654321',
     },
   });
 
-  // Create a user without a subscription
-  const user3 = await prisma.user.create({
+  // Create subscription plans
+  const basicPlan = await prisma.subscriptionPlan.upsert({
+    where: { id: 'basic' },
+    update: {},
+    create: {
+      id: 'basic',
+      name: 'Basic',
+      pricePerMonth: 9.99,
+      description: 'Basic subscription plan',
+    },
+  });
+
+  const premiumPlan = await prisma.subscriptionPlan.upsert({
+    where: { id: 'premium' },
+    update: {},
+    create: {
+      id: 'premium',
+      name: 'Premium',
+      pricePerMonth: 19.99,
+      description: 'Premium subscription plan with extra features',
+    },
+  });
+
+  // Create subscriptions
+  await prisma.subscription.create({
     data: {
-      email: 'alex.jones@example.com',
-      password: 'password789',
-      firstName: 'Alex',
-      lastName: 'Jones',
-      phoneNumber: '+1122334455',
-      avatarUrl: 'https://example.com/avatar3.png',
-      googleId: 'google-id-789',
-      facebookId: 'facebook-id-789',
-      provider: 'google',
-      subscriptions: {
-        create: {
-          planId: standardPlan.id,
-          status: 'inactive',
-        },
-      },
+      userId: user1.id,
+      planId: basicPlan.id,
+      status: 'active',
+      startDate: new Date(),
     },
   });
 
-  console.log('Seeding completed!');
+  await prisma.subscription.create({
+    data: {
+      userId: user2.id,
+      planId: premiumPlan.id,
+      status: 'active',
+      startDate: new Date(),
+    },
+  });
+
+  console.log('Database seeded successfully');
 }
 
 main()
