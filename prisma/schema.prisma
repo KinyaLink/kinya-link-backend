@@ -41,8 +41,8 @@ model Subscription {
   startDate DateTime         @default(now())
   endDate   DateTime?
 
-  user      User             @relation(fields: [userId], references: [id])
-  plan      SubscriptionPlan @relation(fields: [planId], references: [id])
+  user      User             @relation(fields: [userId], references: [id],onDelete: Cascade)
+  plan      SubscriptionPlan @relation(fields: [planId], references: [id],onDelete: Cascade)
 
   @@map("subscriptions")
 }
@@ -69,7 +69,7 @@ model Usage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation("UserUsages", fields: [userId], references: [id])
+  user      User     @relation("UserUsages", fields: [userId], references: [id],onDelete: Cascade)
 
   @@map("usages")
 }

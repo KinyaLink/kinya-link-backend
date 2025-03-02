@@ -13,6 +13,7 @@ import { UsageModule } from './usage/usage.module';
 import { TrackUsageMiddleware } from './usage/middlewares/track-usage.middleware';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthMiddleware } from './auth/middlewares/auth.middleware';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -26,6 +27,7 @@ import { AuthMiddleware } from './auth/middlewares/auth.middleware';
     SubscriptionsModule,
     PaymentsModule,
     FeaturesModule,
+    JwtModule,
     UsageModule,
     PrismaModule,
   ],

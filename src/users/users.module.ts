@@ -5,11 +5,12 @@ import { UsersController } from './controllers/users.controller';
 import { UserEntity } from './entities/user.entity';
 import { TwilioService } from 'src/twilio/twilio.service';
 import { AdminController } from './controllers/admin.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   providers: [UsersService, UserEntity, TwilioService],
   exports: [UsersService],
-  imports: [PrismaModule],
+  imports: [PrismaModule, JwtModule],
   controllers: [UsersController, AdminController],
 })
 export class UsersModule {}

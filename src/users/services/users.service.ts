@@ -83,7 +83,7 @@ export class UsersService {
     if (userToDelete) {
       return this.prisma.user.delete({ where: { id } });
     } else {
-      return { message: 'user not found' };
+      throw new NotFoundException('user not found');
     }
   }
   async getAllUsersWithSubscriptions() {
