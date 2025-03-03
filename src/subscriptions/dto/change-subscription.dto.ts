@@ -7,6 +7,5 @@ export class ChangeSubscriptionDto {
   user_id: string;
 
   @IsNotEmpty()
-  @IsUUID()
   plan_id: string; // The ID of the new plan
 }
