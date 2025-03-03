@@ -24,14 +24,14 @@ export class SubscriptionsService {
       where: { id: Number(userId) },
     });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
     const subscriptionPlan = await this.prisma.subscriptionPlan.findFirst({
       where: { name: plan },
     });
     if (!subscriptionPlan) {
-      throw new Error('Plan not found');
+      throw new NotFoundException('Plan not found');
     }
 
     const subscription = await this.prisma.subscription.create({
@@ -52,7 +52,7 @@ export class SubscriptionsService {
     });
 
     if (!subscription) {
-      throw new Error('Subscription not found');
+      throw new NotFoundException('Subscription not found');
     }
 
     const updatedSubscription = await this.prisma.subscription.update({
@@ -80,7 +80,7 @@ export class SubscriptionsService {
     });
 
     if (!subscription) {
-      throw new Error('No active subscription found');
+      throw new NotFoundException('No active subscription found');
     }
 
     return {
